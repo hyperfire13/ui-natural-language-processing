@@ -1,0 +1,30 @@
+{
+  "name": "student-assessment-machine-learning",
+  "version": "0.2.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "watch": "vue-cli-service build --watch"
+  },
+  "dependencies": {
+    "admin-lte": "^3.1.0",
+    "axios": "^0.24.0",
+    "core-js": "^3.6.5",
+    "html2canvas": "^1.4.1",
+    "npm-watch": "^0.11.0",
+    "vue": "^3.0.0",
+    "vue-router": "^4.0.0-0"
+  },
+  "devDependencies": {
+    "@types/jquery": "^3.5.11",
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/compiler-sfc": "^3.0.0",
+    "jquery": "^3.6.0"
+  },
+  "env": {
+    "jquery": true
+  }
+}
