@@ -15,19 +15,35 @@
                     <div class="form-group">
                       <div class="form-group">
                         <input :class="{ 'is-invalid': fileInvalid }" ref="file" v-on:change="getUploadedFile()" type="file" class="form-control-file" id="exampleFormControlFile1">
-                        <span class="error invalid-feedback">Please select a file with .CSV format</span>
-                        <i class="text-primary">File with .CSV format only</i>
+                        <span class="error invalid-feedback">Please select a file with .PDF format</span>
+                        <i class="text-primary">File with .PDF format only</i>
                       </div>
                     </div>
                     <div class="row justify-content-center">
                       <div class="col-sm-6">
                         <div class="form-group">
                           <label>School Year:</label>
-                          <select v-model="selectedYear" :class="{ 'is-invalid': sectionInvalid }" class="form-control">
+                          <select v-model="selectedYear" :class="{ 'is-invalid': schoolyearInvalid }" class="form-control">
                             <option value="">choose a school year</option>
-                            <option v-for="(section, index) in sections" :key="index" v-bind:value="section.id"> {{section.name}}</option>
+                            <option v-for="(year, index) in schoolyears" :key="index" v-bind:value="year.id"> {{year.name}}</option>
                           </select>
                           <span class="error invalid-feedback">Please select a school year</span>
+                        </div>
+                        <div class="form-group">
+                          <label>School Name:</label>
+                          <select v-on:change="getSections(selectedSchool)" v-model="selectedSchool" :class="{ 'is-invalid': schoolInvalid }" class="form-control">
+                            <option value="">choose a school</option>
+                            <option v-for="(school, index) in schools" :key="index" v-bind:value="school.id"> {{school.name}}</option>
+                          </select>
+                          <span class="error invalid-feedback">Please select a school</span>
+                        </div>
+                        <div class="form-group">
+                          <label>Section:</label>
+                          <select v-model="selectedSection" :class="{ 'is-invalid': sectionInvalid }" class="form-control">
+                            <option value="">choose a section</option>
+                            <option v-for="(section, index) in sections" :key="index" v-bind:value="section.id"> {{section.name}}</option>
+                          </select>
+                          <span class="error invalid-feedback">Please select a section</span>
                         </div>
                       </div>
                     </div>
@@ -60,10 +76,16 @@
     data() {
       return {
         selectedYear:"",
+        selectedSection:"",
+        selectedSchool:"",
         fileInvalid:false,
         nowLoading: true,
+        schoolyearInvalid: false,
         sectionInvalid: false,
+        schoolInvalid: false,
+        schoolyears: [],
         sections: [],
+        schools: [],
         file: '',
         uploadedSuccess: '',
         errorMessage: '',
@@ -71,16 +93,43 @@
     },
     mounted() {
       this.getSchoolYear();
-      
+      this.getSchools();
     },
     methods : {
       getSchoolYear() {
-        // get the sections
+        // get the school year
         let formData = new FormData();
         formData.append('userId', localStorage.getItem('userId'));
         formData.append('token', localStorage.getItem('validatorToken'));
         axios.post(
           process.env.VUE_APP_ROOT_API + 'admin/get-year.php',formData,
+          {
+          headers: {
+          'Content-Type': 'multipart/form-data', 
+          }
+        }
+        ).then((response) => {
+        var result = response.data
+        if (result.status === 'success') {
+          this.schoolyears = result.sections
+        } else {
+          this.schoolyears = [];
+        }
+        this.nowLoading = false;
+        }).catch((response) => {
+          //handle error
+          this.nowLoading = false;
+          console.log(response)
+        });
+      },
+      getSections(schoolId) {
+        // get the sections
+        let formData = new FormData();
+        formData.append('userId', localStorage.getItem('userId'));
+        formData.append('token', localStorage.getItem('validatorToken'));
+        formData.append('schoolId', schoolId);
+        axios.post(
+          process.env.VUE_APP_ROOT_API + 'admin/get-sections.php',formData,
           {
           headers: {
           'Content-Type': 'multipart/form-data', 
@@ -100,31 +149,66 @@
           console.log(response)
         });
       },
+      getSchools() {
+        // get the schools
+        let formData = new FormData();
+        formData.append('userId', localStorage.getItem('userId'));
+        formData.append('token', localStorage.getItem('validatorToken'));
+        axios.post(
+          process.env.VUE_APP_ROOT_API + 'admin/get-schools.php',formData,
+          {
+          headers: {
+          'Content-Type': 'multipart/form-data', 
+          }
+        }
+        ).then((response) => {
+        var result = response.data
+        if (result.status === 'success') {
+          this.schools = result.schools
+        } else {
+          this.schools = [];
+        }
+        this.nowLoading = false;
+        }).catch((response) => {
+          //handle error
+          this.nowLoading = false;
+          console.log(response)
+        });
+      },
       startAssessment() {
+        this.uploadedSuccess = false
         // check if subject, module and a section was selected
-        this.sectionInvalid = false;
+        this.schoolyearInvalid = false;
         this.fileInvalid = false;
         if (this.file === "") {
           this.fileInvalid = true;
         }
         if (this.file !== "") {
-          if (this.file.name.split(".").pop() !== 'csv') {
+          if (this.file.name.split(".").pop() !== 'pdf') {
              this.fileInvalid = true;
           }
         }
         if (this.selectedYear === "") {
+          this.schoolyearInvalid = true
+        } 
+        if (this.selectedSchool === "") {
+          this.schoolInvalid = true
+        } 
+        if (this.selectedSection === "") {
           this.sectionInvalid = true
         } 
-        if (this.sectionInvalid !== true && this.fileInvalid !== true) {
+        if (this.schoolyearInvalid !== true && this.fileInvalid !== true) {
           this.nowLoading = true;
           let formData = new FormData();
           formData.append('userId', localStorage.getItem('userId'));
           formData.append('token', localStorage.getItem('validatorToken'));
           formData.append('file', this.file);
           formData.append('selectedYear', this.selectedYear)
+          formData.append('selectedSchool', this.selectedSchool)
+          formData.append('selectedSection', this.selectedSection)
           axios({
             method: 'post',
-            url: process.env.VUE_APP_ROOT_API + 'admin/start-assessment.php',
+            url: process.env.VUE_APP_ROOT_API + 'admin/main.php',
             data: formData,
             config: { headers: {'Content-Type': 'multipart/form-data' }}
           })
@@ -133,12 +217,14 @@
             if (result.status === 'success') {
               this.uploadedSuccess = true;
               this.selectedYear = '';
+              this.selectedSection = '';
+              this.selectedSchool = '';
               this.$refs.file.value = null;
               this.getSchoolYear();
             }
             else {
               this.uploadedSuccess = false;
-              this.errorMessage = "Error in uploading! Please re-check the data in your csv file"
+              this.errorMessage = "Error in uploading! Please re-check the data in your pdf file. There must be a Rationale"
             }
           this.nowLoading = false;
             

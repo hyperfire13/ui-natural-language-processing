@@ -39,7 +39,7 @@
                     class="nav-link"
                     active-class="active">
                     <i class="nav-icon fas fa-file"></i>
-                    <p>Upload CSV File</p>
+                    <p>Upload Proposal File</p>
                 </router-link>
               </li>
               <li class="nav-item">
