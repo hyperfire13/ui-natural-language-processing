@@ -52,7 +52,7 @@
                   <p>Generate Report</p>
                 </router-link>
               </li>
-              <!-- <li v-if="level === 0" class="nav-item ">
+              <li v-if="level === 0" class="nav-item ">
                 <a href="javascript:void(0)" class="nav-link">
                   <i class="nav-icon fas fa-tachometer-alt"></i>
                   <p>
@@ -61,13 +61,22 @@
                   </p>
                 </a>
                 <ul class="nav nav-treeview" style="display: none;">
-                  <li class="nav-item">
+                  <!-- <li class="nav-item">
                     <router-link
                       to="/factors"
                       class="nav-link"
                       active-class="active">
                       <i class="nav-icon fas fa-pen"></i>
                       <p>Factors and Intervention</p>
+                    </router-link>
+                  </li> -->
+                   <li class="nav-item">
+                    <router-link
+                      to="/users"
+                      class="nav-link"
+                      active-class="active">
+                      <i class="nav-icon fas fa-pen"></i>
+                      <p>Schools</p>
                     </router-link>
                   </li>
                   <li class="nav-item">
@@ -79,7 +88,7 @@
                       <p>Sections</p>
                     </router-link>
                   </li>
-                  <li class="nav-item">
+                  <!-- <li class="nav-item">
                     <router-link
                       to="/users"
                       class="nav-link"
@@ -87,8 +96,8 @@
                       <i class="nav-icon fas fa-pen"></i>
                       <p>Users</p>
                     </router-link>
-                  </li>
-                  <li class="nav-item">
+                  </li> -->
+                  <!-- <li class="nav-item">
                     <router-link
                       to="/archived-factors"
                       class="nav-link"
@@ -96,9 +105,9 @@
                       <i class="nav-icon fas fa-pen"></i>
                       <p>Archived Factors</p>
                     </router-link>
-                  </li>
+                  </li> -->
                 </ul>
-              </li> -->
+              </li>
               <li class="nav-item">
               </li>
             </ul>

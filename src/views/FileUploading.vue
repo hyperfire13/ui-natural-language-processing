@@ -1,11 +1,11 @@
 <template>
-  <section class="content bg-olive">
+  <section class="content bg-navy">
     <div class="container-fluid">
       <div class="row justify-content-center">
         <!-- left column -->
         <div class="col-md-6">
           <div class="card card-primary text-dark">
-              <div class="card-header bg-olive">
+              <div class="card-header bg-navy">
                   <h3 class="card-title">Students' Records</h3>
               </div>
               <!-- /.card-header -->
@@ -123,6 +123,7 @@
         });
       },
       getSections(schoolId) {
+         this.nowLoading = true;
         // get the sections
         let formData = new FormData();
         formData.append('userId', localStorage.getItem('userId'));

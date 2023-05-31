@@ -10,6 +10,13 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
+                <div class="form-group">
+                          <label class="text-dark">School Name:</label>
+                          <select v-on:change="getSections(selectedSchool)" v-model="selectedSchool" :class="{ 'is-invalid': schoolInvalid }" class="form-control">
+                            <option value="">choose a school</option>
+                            <option v-for="(school, index) in schools" :key="index" v-bind:value="school.id"> {{school.name}}</option>
+                          </select>
+                        </div>
                 <ul v-for="(section, index) in sections" v-bind:key="section.id" class="todo-list ui-sortable" data-widget="todo-list">
                   <li>
                     <!-- todo text -->
@@ -34,7 +41,7 @@
                 <div class="form-group form-inline">
                 <input  :class="{ 'is-invalid': newSectionInvalid }"  type="text" v-model="addSectionName" class="form-control col-md-6" id="" placeholder="">
                 &nbsp;&nbsp;
-                <button @click="addSection(addSectionName)" type="button" class="btn btn-primary float-right"><i class="fas fa-plus"></i> Add Section</button>
+                <button @click="addSection(addSectionName, selectedSchool)" type="button" class="btn btn-primary float-right"><i class="fas fa-plus"></i> Add Section</button>
                 </div>
               </div>
             </div>
@@ -69,37 +76,43 @@
         repasswordInvalid: 0,
         successMessage: "",
         validEntry : true,
+        selectedSchool: ""
       }
     },
     mounted() {
-      // get the sections
-      let formData = new FormData();
-      formData.append('userId', localStorage.getItem('userId'));
-      formData.append('token', localStorage.getItem('validatorToken'));
-      axios.post(
-        process.env.VUE_APP_ROOT_API + 'admin/get-sections.php',formData,
-        {
-        headers: {
-        'Content-Type': 'multipart/form-data', 
-        }
-      }
-      ).then((response) => {
-      var result = response.data
-      if (result.status === 'success') {
-        this.sections = result.sections
-      } else {
-        this.sections = [];
-      }
-      this.nowLoading = false;
-      }).catch((response) => {
-        //handle error
-        this.nowLoading = false;
-        console.log(response)
-      });
+      this.getSchools();
     },
     methods : {
-      addSection (section) {
-        if (section === '') {
+      getSections(schoolId) {
+        this.nowLoading = true;
+        // get the sections
+        let formData = new FormData();
+        formData.append('userId', localStorage.getItem('userId'));
+        formData.append('token', localStorage.getItem('validatorToken'));
+        formData.append('schoolId', schoolId);
+        axios.post(
+          process.env.VUE_APP_ROOT_API + 'admin/get-sections.php',formData,
+          {
+          headers: {
+          'Content-Type': 'multipart/form-data', 
+          }
+        }
+        ).then((response) => {
+        var result = response.data
+        if (result.status === 'success') {
+          this.sections = result.sections
+        } else {
+          this.sections = [];
+        }
+        this.nowLoading = false;
+        }).catch((response) => {
+          //handle error
+          this.nowLoading = false;
+          console.log(response)
+        });
+      },
+      addSection (section, schoolId) {
+        if (section === '' || schoolId === "") {
           this.newSectionInvalid = true
         } else {
           this.newSectionInvalid = false
@@ -108,6 +121,7 @@
           formData.append('userId', localStorage.getItem('userId'));
           formData.append('token', localStorage.getItem('validatorToken'));
           formData.append('section', section);
+          formData.append('schoolId', schoolId);
           axios.post(
             process.env.VUE_APP_ROOT_API + 'admin/add-section.php',formData,
             {
@@ -191,6 +205,32 @@
             console.log(response)
           });
         }
+      },
+      getSchools() {
+        // get the schools
+        let formData = new FormData();
+        formData.append('userId', localStorage.getItem('userId'));
+        formData.append('token', localStorage.getItem('validatorToken'));
+        axios.post(
+          process.env.VUE_APP_ROOT_API + 'admin/get-schools.php',formData,
+          {
+          headers: {
+          'Content-Type': 'multipart/form-data', 
+          }
+        }
+        ).then((response) => {
+        var result = response.data
+        if (result.status === 'success') {
+          this.schools = result.schools
+        } else {
+          this.schools = [];
+        }
+        this.nowLoading = false;
+        }).catch((response) => {
+          //handle error
+          this.nowLoading = false;
+          console.log(response)
+        });
       },
       cancelEdit () {
         this.showEditText = false;
