@@ -4,6 +4,7 @@ import Dashboard from '../views/Dashboard.vue'
 import Factors from '../views/Factors.vue'
 import ArchiveFactors from '../views/ArchivedFactors.vue'
 import Sections from '../views/Sections.vue'
+import Schools from '../views/Schools.vue'
 import Users from '../views/Users.vue'
 import FileUploading from '../views/FileUploading.vue'
 import Login from '../Login.vue'
@@ -51,6 +52,11 @@ const routes = [
         path: '/archived-factors',
         name: 'ArchivedFactors',
         component: ArchiveFactors
+      },
+      {
+        path: '/schools',
+        name: 'Schools',
+        component: Schools
       },
       {
         path: '/sections',

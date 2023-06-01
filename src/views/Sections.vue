@@ -2,9 +2,9 @@
   <section class="content">
     <div class="container-fluid">
       <div class="row">
-        <div class="card card-primary col-md-6">
-              <div class="card-header ui-sortable-handle" style="cursor: move;">
-                <h3 class="card-title">
+        <div class="card card-navy col-md-6 ">
+              <div class="card-header ui-sortable-handle bg-navy" style="cursor: move;"> 
+                <h3 class="card-title ">
                   Sections
                 </h3>
               </div>

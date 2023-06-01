@@ -6,7 +6,7 @@
         <div class="col-md-6">
           <div class="card card-primary text-dark">
               <div class="card-header bg-navy">
-                  <h3 class="card-title">Students' Records</h3>
+                  <h3 class="card-title">Proposal Uploading</h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
