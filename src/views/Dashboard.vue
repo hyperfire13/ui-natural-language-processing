@@ -16,15 +16,6 @@
     <div class="card bg-olive card-tabs">
       <div class="card-header p-0 pt-1">
         <ul class="nav nav-tabs bg-olive" id="custom-tabs-one-tab" role="tablist">
-          <li class="nav-item">
-            <a v-on:click="switchTab(1)" class="nav-link active text-dark" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="false"><b>GWA and Track</b></a>
-          </li>
-          <li class="nav-item">
-            <a v-on:click="switchTab(2)" class="nav-link text-dark" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="true"><b>GWA, TRACK and ADMISSION TEST</b> </a>
-          </li>
-          <li v-on:click="switchTab(3)" class="nav-item">
-            <a class="nav-link text-dark" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#custom-tabs-one-messages" role="tab" aria-controls="custom-tabs-one-messages" aria-selected="false"><b>GWA, TRACK, ADMISSION TEST and Final Grades</b></a>
-          </li>
           <li v-on:click="switchTab(4)" class="nav-item">
             <a class="nav-link text-dark" id="custom-tabs-one-messages-tab2" data-toggle="pill" href="#custom-tabs-one-messages2" role="tab" aria-controls="custom-tabs-one-messages2" aria-selected="false"><b>Graph Reports</b></a>
           </li>
@@ -32,307 +23,9 @@
       </div>
       <div class="card-body ">
         <div class="tab-content" id="custom-tabs-one-tabContent">
-          <!-- GWA and Track tab  -->
-          <div class="tab-pane fade active show" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
-            <!-- GWA and Track table -->
-            <section class="content text-dark">
-              <div class="row">
-                <div class="col-12">
-                  <div class="card">
-                    <div class="card-header">
-                      <div class="row">
-                        <div class="col-md-12">
-                          <!-- <h3 class="card-title">Students' Profile</h3> -->
-                          <h3 class="card-title"> 
-                            <b>GWA and TRACK</b>
-                            
-                          </h3>
-                          <div class="form-inline float-right">
-                            <div class="form-group mb-2">
-                              <label class="" for="autoSizingCheck">
-                                  SY: &nbsp;
-                              </label>
-                              <select id="resultsYearSelector" v-on:change="showFinalResults(2)" v-model="selectedYear" class="form-control">
-                                <option value="">choose a year</option>
-                                <option v-for="(sy, index) in schoolYear" :key="index" v-bind:value="sy.id"> {{sy.name}}</option>
-                              </select>
-                            </div>
-                            <div class="form-group mx-sm-3 mb-2">
-                              <select id="resultsSectionSelector" :disabled="finalResults.length === 0" v-model="selectedSection" class="form-control" style="width: 250px;">
-                                  <option value="">All course</option>
-                                  <option value="Bachelor of Science in Business Administration Major in Financial Management">BSBA Major in financial Management</option>
-                                  <option value="Bachelor of Science in Business Administration Major in Marketing Management">BSBA Major in Marketing</option>
-                                  <option value="Bachelor of Science in Computer Engineering">BS ComEng</option>
-                                  <option value="Bachelor of Science in Entrepreneurship">BS Entrep</option>
-                                  <option value="Bachelor of Science in Industrial Engineering">BS  Industrial Eng</option>
-                                  <option value="Bachelor of Science in Industrial Technology Major in Automotive">BS Industrial Tech Major in Automative</option>
-                                  <option value="Bachelor of Science in Industrial Technology Major in Computer">BS Industrial Tech Major in Computer</option>
-                                  <option value="Bachelor of Science in Industrial Technology Major in Drafting">BS Industrial Tech Major in Drafting</option>
-                                  <option value="Bachelor of Science in Industrial Technology Major in Electrical">BS Industrial Tech Major in Electrical</option>
-                                  <option value="Bachelor of Science in Industrial Technology Major in Electronics">BS Industrial Tech Major in Electronics</option>
-                                  <option value="Bachelor of Science in Information Technology">BS Inforamtion Technology</option>
-                                  <option value="Certificate in Two-year Technology Major in Heating, Ventilation & Air Conditioning">Certificate in Two-year Technology Major in Heating, Ventilation & Air Conditioning</option>
-                                  <option value="Certificate in Two-year Technology Major in Welding and Fabrication">Certificate in Two-year Technology Major in Welding and Fabrication</option>
-                                  <!-- <option value="Continue">Continue</option> -->
-                                  <!-- <option v-for="(section, index) in sections" :key="index" v-bind:value="section.name"> {{section.name}}</option> -->
-                                </select>
-                            </div>
-                            <div class="form-group mx-sm-3 mb-2">
-                              <button :disabled="finalResults.length === 0"  @click="downloadReport(selectedYear, selectedSection)" type="button" class="btn btn-info">
-                              <i class="fas fa-download"></i>
-                              </button>
-                              &nbsp;
-                              <button :disabled="finalResults.length === 0"  @click="printReport(selectedYear, selectedSection)" type="button" class="btn btn-info">
-                              <i class="fas fa-print"></i>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- /.card-header -->
-                    <div class="card-body table-responsive p-0" style="height: 800px;">
-                      <div v-if="filteredResults.length === 0" class="text-center">
-                        <h5>No records to show</h5>
-                        <h7>(Please choose school year)</h7>
-                      </div>
-                      <div v-if="finalResults.length > 0" class="text-center">
-                        <!-- <h4>College of Computer Studies</h4> -->
-                        <h5 id="csvTitle" class="card-text">PREDICTED PROGRAM PLACEMENT School Year: {{yearName}}</h5>
-                      </div>
-                        <table v-if="finalResults.length >= 0" class="table table-hover table-head-fixed  text-nowrap table-bordered text-center">
-                          <thead>
-                            <tr>
-                              <th class="sticky-header">STUDENT NAME</th>
-                              <th>GWA</th>
-                              <th>TRACK</th>
-                              <th>PREDICTED PROGRAM PLACEMENT</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              
-                            </tr>
-                            <tr v-for="(result, index) in filteredResults" :key="index">
-                              <td>{{result[0]}}</td>
-                              <td>{{result[1]}}</td>
-                              <td>{{result[2]}}</td>
-                              <td class="bg-success" >{{result[3]}}</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                    </div>
-                    <div v-if="nowLoading" class="overlay"><i class="fas fa-2x fa-sync-alt fa-spin"></i></div>
-                    <!-- /.card-body -->
-                  </div>
-                  <!-- /.card -->
-                </div>
-              </div>
-            </section>
-          </div>
-          <!-- GWA TRACK and ADMISSION TEST tab -->
-          <div class="tab-pane fade " id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
-              <!-- GWA TRACK AND ADMISSION TEST -->
-            <section class="content text-dark">
-              <div class="row">
-                <div class="col-12">
-                  <div class="card">
-                    <div class="card-header">
-                      <div class="row">
-                        <div class="col-md-12">
-                          <!-- <h3 class="card-title">Students' Profile</h3> -->
-                          <h3 class="card-title"> 
-                            <b>GWA, TRACK and ADMISSION TEST</b>
-                          </h3>
-                          <div class="form-inline float-right">
-                            <div class="form-group mb-2">
-                              <label class="" for="autoSizingCheck">
-                                  SY: &nbsp;
-                              </label>
-                              <select id="resultsYearSelector" v-on:change="showFinalResults(3)" v-model="selectedYear" class="form-control">
-                                <option value="">choose a year</option>
-                                <option v-for="(sy, index) in schoolYear" :key="index" v-bind:value="sy.id"> {{sy.name}}</option>
-                              </select>
-                            </div>
-                            <div class="form-group mx-sm-3 mb-2">
-                              <select id="resultsSectionSelector" :disabled="finalResults.length === 0" v-model="selectedSection" class="form-control" style="width: 250px;">
-                                  <option value="">All course</option>
-                                  <option value="Bachelor of Science in Business Administration Major in Financial Management">BSBA Major in financial Management</option>
-                                  <option value="Bachelor of Science in Business Administration Major in Marketing Management">BSBA Major in Marketing</option>
-                                  <option value="Bachelor of Science in Computer Engineering">BS ComEng</option>
-                                  <option value="Bachelor of Science in Entrepreneurship">BS Entrep</option>
-                                  <option value="Bachelor of Science in Industrial Engineering">BS  Industrial Eng</option>
-                                  <option value="Bachelor of Science in Industrial Technology Major in Automotive">BS Industrial Tech Major in Automative</option>
-                                  <option value="Bachelor of Science in Industrial Technology Major in Computer">BS Industrial Tech Major in Computer</option>
-                                  <option value="Bachelor of Science in Industrial Technology Major in Drafting">BS Industrial Tech Major in Drafting</option>
-                                  <option value="Bachelor of Science in Industrial Technology Major in Electrical">BS Industrial Tech Major in Electrical</option>
-                                  <option value="Bachelor of Science in Industrial Technology Major in Electronics">BS Industrial Tech Major in Electronics</option>
-                                  <option value="Bachelor of Science in Information Technology">BS Inforamtion Technology</option>
-                                  <option value="Certificate in Two-year Technology Major in Heating, Ventilation & Air Conditioning">Certificate in Two-year Technology Major in Heating, Ventilation & Air Conditioning</option>
-                                  <option value="Certificate in Two-year Technology Major in Welding and Fabrication">Certificate in Two-year Technology Major in Welding and Fabrication</option>
-                                  <!-- <option value="Continue">Continue</option> -->
-                                  <!-- <option v-for="(section, index) in sections" :key="index" v-bind:value="section.name"> {{section.name}}</option> -->
-                                </select>
-                            </div>
-                            <div class="form-group mx-sm-3 mb-2">
-                              <button :disabled="finalResults.length === 0"  @click="downloadReport(selectedYear, selectedSection)" type="button" class="btn btn-info">
-                              <i class="fas fa-download"></i>
-                              </button>
-                              &nbsp;
-                              <button :disabled="finalResults.length === 0"  @click="printReport(selectedYear, selectedSection)" type="button" class="btn btn-info">
-                              <i class="fas fa-print"></i>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- /.card-header -->
-                    <div class="card-body table-responsive p-0" style="height: 800px;">
-                      <div v-if="filteredResults.length === 0" class="text-center">
-                        <h5>No records to show</h5>
-                        <h7>(Please choose school year)</h7>
-                      </div>
-                      <div v-if="finalResults.length > 0" class="text-center">
-                        <!-- <h4>College of Computer Studies</h4> -->
-                        <h5 id="csvTitle" class="card-text">PREDICTED PROGRAM PLACEMENT School Year: {{yearName}}</h5>
-                      </div>
-                        <table v-if="finalResults.length >= 0" class="table table-hover table-head-fixed  text-nowrap table-bordered text-center">
-                          <thead>
-                            <tr>
-                              <th class="sticky-header">STUDENT NAME</th>
-                              <th>GWA</th>
-                              <th>SCORE</th>
-                              <th>TRACK</th>
-                              <th>PREDICTED PROGRAM PLACEMENT</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              
-                            </tr>
-                            <tr v-for="(result, index) in filteredResults" :key="index">
-                              <td>{{result[0]}}</td>
-                              <td>{{result[1]}}</td>
-                              <td>{{result[2]}}</td>
-                              <td>{{result[3]}}</td>
-                              <td class="bg-success" >{{result[4]}}</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                    </div>
-                    <div v-if="nowLoading" class="overlay"><i class="fas fa-2x fa-sync-alt fa-spin"></i></div>
-                    <!-- /.card-body -->
-                  </div>
-                  <!-- /.card -->
-                </div>
-              </div>
-            </section>
-          </div>
-           <!-- ALL FEATURE tab -->
-          <div class="tab-pane fade" id="custom-tabs-one-messages" role="tabpanel" aria-labelledby="custom-tabs-one-messages-tab">
-            <section class="content text-dark">
-              <div class="row">
-                <div class="col-12">
-                  <div class="card">
-                    <div class="card-header">
-                      <div class="row">
-                        <div class="col-md-12">
-                          <!-- <h3 class="card-title">Students' Profile</h3> -->
-                          <h3 class="card-title"> 
-                            <b>GWA, TRACK and ADMISSION TEST and FINAL GRADES</b>
-                          </h3>
-                          <div class="form-inline float-right">
-                            <div class="form-group mb-2">
-                              <label class="" for="autoSizingCheck">
-                                  SY: &nbsp;
-                              </label>
-                              <select id="resultsYearSelector" v-on:change="showFinalResults(1)" v-model="selectedYear" class="form-control">
-                                <option value="">choose a year</option>
-                                <option v-for="(sy, index) in schoolYear" :key="index" v-bind:value="sy.id"> {{sy.name}}</option>
-                              </select>
-                            </div>
-                            <div class="form-group mx-sm-3 mb-2">
-                              <select id="resultsSectionSelector" :disabled="finalResults.length === 0" v-model="selectedSection" class="form-control" style="width: 250px;">
-                                  <option value="">All course</option>
-                                  <option value="Bachelor of Science in Business Administration Major in Financial Management">BSBA Major in financial Management</option>
-                                  <option value="Bachelor of Science in Business Administration Major in Marketing Management">BSBA Major in Marketing</option>
-                                  <option value="Bachelor of Science in Computer Engineering">BS ComEng</option>
-                                  <option value="Bachelor of Science in Entrepreneurship">BS Entrep</option>
-                                  <option value="Bachelor of Science in Industrial Engineering">BS  Industrial Eng</option>
-                                  <option value="Bachelor of Science in Industrial Technology Major in Automotive">BS Industrial Tech Major in Automative</option>
-                                  <option value="Bachelor of Science in Industrial Technology Major in Computer">BS Industrial Tech Major in Computer</option>
-                                  <option value="Bachelor of Science in Industrial Technology Major in Drafting">BS Industrial Tech Major in Drafting</option>
-                                  <option value="Bachelor of Science in Industrial Technology Major in Electrical">BS Industrial Tech Major in Electrical</option>
-                                  <option value="Bachelor of Science in Industrial Technology Major in Electronics">BS Industrial Tech Major in Electronics</option>
-                                  <option value="Bachelor of Science in Information Technology">BS Inforamtion Technology</option>
-                                  <option value="Certificate in Two-year Technology Major in Heating, Ventilation & Air Conditioning">Certificate in Two-year Technology Major in Heating, Ventilation & Air Conditioning</option>
-                                  <option value="Certificate in Two-year Technology Major in Welding and Fabrication">Certificate in Two-year Technology Major in Welding and Fabrication</option>
-                                  <!-- <option value="Continue">Continue</option> -->
-                                  <!-- <option v-for="(section, index) in sections" :key="index" v-bind:value="section.name"> {{section.name}}</option> -->
-                                </select>
-                            </div>
-                            <div class="form-group mx-sm-3 mb-2">
-                              <button :disabled="finalResults.length === 0"  @click="downloadReport(selectedYear, selectedSection)" type="button" class="btn btn-info">
-                              <i class="fas fa-download"></i>
-                              </button>
-                              &nbsp;
-                              <button :disabled="finalResults.length === 0"  @click="printReport(selectedYear, selectedSection)" type="button" class="btn btn-info">
-                              <i class="fas fa-print"></i>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- /.card-header -->
-                    <div class="card-body table-responsive p-0" style="height: 800px;">
-                      <div v-if="filteredResults.length === 0" class="text-center">
-                        <h5>No records to show</h5>
-                        <h7>(Please choose school year)</h7>
-                      </div>
-                      <div v-if="finalResults.length > 0" class="text-center">
-                        <!-- <h4>College of Computer Studies</h4> -->
-                        <h5 id="csvTitle" class="card-text">PREDICTED PROGRAM PLACEMENT School Year: {{yearName}}</h5>
-                      </div>
-                        <table v-if="finalResults.length >= 0" class="table table-hover table-head-fixed  text-nowrap table-bordered text-center">
-                          <thead>
-                            <tr>
-                              <th class="sticky-header">STUDENT NAME</th>
-                              <th>GWA</th>
-                              <th>SCORE</th>
-                              <th>TRACK</th>
-                              <th>ENGLISH</th>
-                              <th>MATH</th>
-                              <th>PREDICTED PROGRAM PLACEMENT</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              
-                            </tr>
-                            <tr v-for="(result, index) in filteredResults" :key="index">
-                              <td>{{result[0]}}</td>
-                              <td>{{result[1]}}</td>
-                              <td>{{result[2]}}</td>
-                              <td>{{result[3]}}</td>
-                              <td>{{result[4]}}</td>
-                              <td>{{result[5]}}</td>
-                              <td class="bg-success" >{{result[6]}}</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                    </div>
-                    <div v-if="nowLoading" class="overlay"><i class="fas fa-2x fa-sync-alt fa-spin"></i></div>
-                    <!-- /.card-body -->
-                  </div>
-                  <!-- /.card -->
-                </div>
-              </div>
-            </section>
-          </div>
+          
           <!-- GRAPHS tab -->
-          <div class="tab-pane fade text-dark" id="custom-tabs-one-messages2" role="tabpanel" aria-labelledby="custom-tabs-one-messages-tab">
+          <div class="tab-pane fade text-dark active show" id="custom-tabs-one-messages2" role="tabpanel" aria-labelledby="custom-tabs-one-messages-tab">
             <section class="content">
               <div class="card" id="captureGraph">
                 <div class="card-header">
@@ -344,9 +37,20 @@
                       <label class="" for="autoSizingCheck">
                           SY: &nbsp;
                         </label>
-                        <select id="attritionYearSelector" v-on:change="showFinalResults(4)" v-model="selectedYear"  class="form-control">
+                        <select id="" v-on:change="getSchools()" v-model="selectedYear"  class="form-control">
                           <option value="">choose a year</option>
                           <option v-for="(sy, index) in schoolYear" :key="index" v-bind:value="sy.id"> {{sy.name}}</option>
+                        </select>
+                    </div>
+                    &nbsp;&nbsp;
+                    <div class="form-group mb-2">
+                      <label class="" for="autoSizingCheck">
+                          School: &nbsp;
+                        </label>
+                        <select id="attritionYearSelector" v-on:change="showFinalResults(4)" v-model="selectedSchool"  class="form-control">
+                          <option value="">choose a school</option>
+                          <option value="0">All School</option>
+                          <option v-for="(sy, index) in schools" :key="index" v-bind:value="sy.id"> {{sy.name}}</option>
                         </select>
                     </div>
                     
@@ -501,11 +205,13 @@
     name: 'Dashboard',
      data() {
       return {
+        selectedSchool:"",
         selectedYear:"",
         yearName: '',
         sectionName: '',
         selectedSection:'',
         sections: [],
+        schools:[],
         schoolYear: [],
         finalResults: [],
         nowLoading: false,
@@ -521,6 +227,32 @@
 
     },
     methods: {
+      getSchools() {
+        // get the schools
+        let formData = new FormData();
+        formData.append('userId', localStorage.getItem('userId'));
+        formData.append('token', localStorage.getItem('validatorToken'));
+        axios.post(
+          process.env.VUE_APP_ROOT_API + 'admin/get-schools.php',formData,
+          {
+          headers: {
+          'Content-Type': 'multipart/form-data', 
+          }
+        }
+        ).then((response) => {
+        var result = response.data
+        if (result.status === 'success') {
+          this.schools = result.schools
+        } else {
+          this.schools = [];
+        }
+        this.nowLoading = false;
+        }).catch((response) => {
+          //handle error
+          this.nowLoading = false;
+          console.log(response)
+        });
+      },
       showAttritionResults() {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
@@ -633,6 +365,7 @@
         formData.append('userId', localStorage.getItem('userId'));
         formData.append('token', localStorage.getItem('validatorToken'));
         formData.append('selectedYear', this.selectedYear);
+        formData.append('selectedSchool', this.selectedSchool);
         axios.post(
           process.env.VUE_APP_ROOT_API + 'admin/get-final-results.php',formData,
           {
@@ -644,22 +377,6 @@
           var result = response.data
           this.mode = mode
           if (result.status === 'success') {
-            // if mode === 2 , show two feature data
-            if (this.mode === 2) {
-              this.finalResults = result.twoFeature
-              this.finalResults.splice(0, 1)
-            }
-            // if mode === 2 , show two feature data
-            if (this.mode === 3) {
-              this.finalResults = result.threeFeature
-              this.finalResults.splice(0, 1)
-            }
-            // if mode === 1 , show two feature data
-            if (this.mode === 1) {
-              this.finalResults = result.fullFeature
-              this.finalResults.splice(0, 1)
-            }
-
             // if mode === 4, this is for the graph
             if (this.mode === 4) {
               result.fullFeature.splice(0, 1)

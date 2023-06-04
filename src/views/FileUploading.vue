@@ -22,6 +22,11 @@
                     <div class="row justify-content-center">
                       <div class="col-sm-6">
                         <div class="form-group">
+                          <label>Title:</label>
+                          <input v-model="researchTitle" :class="{ 'is-invalid': researchTitleInvalid }" class="form-control">
+                          <span class="error invalid-feedback">Please include title</span>
+                        </div>
+                        <div class="form-group">
                           <label>School Year:</label>
                           <select v-model="selectedYear" :class="{ 'is-invalid': schoolyearInvalid }" class="form-control">
                             <option value="">choose a school year</option>
@@ -75,6 +80,8 @@
     name: 'FileUploading',
     data() {
       return {
+        researchTitle:"",
+        researchTitleInvalid:false,
         selectedYear:"",
         selectedSection:"",
         selectedSchool:"",
@@ -192,8 +199,11 @@
         if (this.selectedYear === "") {
           this.schoolyearInvalid = true
         } 
-        if (this.selectedSchool === "") {
-          this.schoolInvalid = true
+        if (this.selectedYear === "") {
+          this.schoolyearInvalid = true
+        } 
+        if (this.researchTitle === "") {
+          this.researchTitleInvalid = true
         } 
         if (this.selectedSection === "") {
           this.sectionInvalid = true
@@ -207,6 +217,7 @@
           formData.append('selectedYear', this.selectedYear)
           formData.append('selectedSchool', this.selectedSchool)
           formData.append('selectedSection', this.selectedSection)
+          formData.append('researchTitle', this.researchTitle)
           axios({
             method: 'post',
             url: process.env.VUE_APP_ROOT_API + 'admin/main.php',
