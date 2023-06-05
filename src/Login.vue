@@ -1,8 +1,8 @@
 !<template>
-  <body class="hold-transition login-page bg-olive">
+  <body class="hold-transition login-page bg-navy">
     <div class="login-box">
       <div class="login-logo">
-        <h3 >Program Prediction</h3>
+        <h3 >Research Proposal Categorization</h3>
       </div>
       <!-- /.login-logo -->
       <div class="card">

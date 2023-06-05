@@ -1,5 +1,5 @@
 <template>
-  <body class="register-page bg-olive" style="min-height: 570.781px;">
+  <body class="register-page bg-navy" style="min-height: 570.781px;">
     <div class="register-box">
       <div class="register-logo">
           <h3>User Registration</h3>
