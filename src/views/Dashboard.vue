@@ -476,7 +476,7 @@
         // this.sectionName = $('#attritionSectionSelector option:selected').text();
         this.yearName = $('#attritionYearSelector option:selected').text();
         this.selectedSchoolName = $('#schoolNameSelector option:selected').text();
-        if (this.attritionResults.result !== undefined) {alert(this.attritionResults.result.anibdampi)
+        if (this.attritionResults.result !== undefined) {
             finalCount = this.attritionResults.result
             this.graphLabel = this.attritionResults.result
             setTimeout(function () {
