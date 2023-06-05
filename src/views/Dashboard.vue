@@ -379,12 +379,9 @@
           if (result.status === 'success') {
             // if mode === 4, this is for the graph
             if (this.mode === 4) {
-              result.fullFeature.splice(0, 1)
-              result.threeFeature.splice(0, 1)
-              result.twoFeature.splice(0, 1)
               this.attritionResults = result
-              this.graphDisplay = this.attritionResults.threeFeature.length
-              // alert(JSON.stringify(this.attritionResults.threeFeature))
+              this.graphDisplay = this.attritionResults.result !== undefined ? 1 : 0
+               alert(JSON.stringify(this.attritionResults.result))
             }
             
           } else {
@@ -565,6 +562,7 @@
        
       },
       filteredFactors: function () {
+        
         let filterSection = this.selectedSection
         this.yearName = $('#factorYearSelector option:selected').text()
         return this.factors.filter(function(item) {
@@ -576,55 +574,13 @@
         })
       },
       filteredAttritions: function () {
-        let filterSection = this.selectedSection;
-        var totalStudents;
-        var stopStudents;
-        var continueStudents;
-
-        var fullFeatureGraph;
-        var threeFeatureGraph;
-        var twoFeatureGraph;
-
-        var fullFeatureGraphArray = [];
-        var threeFeatureGraphArray = [];
-        var twoFeatureGraphArray = [];
-
-        var graphLabels = [];
-        var threeGraphLabels = [];
-        var twoGraphLabels = [];
-
-        var graphData = [];
-        var threeGraphData = [];
-        var twoGraphData = [];
-
-        var fullFeatureCount = {};
-        var threeFeatureCount = {};
-        var twoFeatureCount = {};
-
-        var finalFullFeatureCount;
-        var finalThreeFeatureCount;
-        var finalTwoFeatureCount;
-
+        var finalCount;
         var attritionSummary = {};
-        var graphColor = ['#00a65a', '#f56954', '#ffe3c6', '#5865f2', '#654321', '#fedcba', '#006400', '#ff007f', '#e2062c', '#a8e4a0', '#191970', '#915f6d', '#1ca9c9', '#0fc163'];
+        var graphColor = ['#00a65a', '#f56954', '#ffe3c6', '#5865f2', '#654321'];
         // this.sectionName = $('#attritionSectionSelector option:selected').text();
         this.yearName = $('#attritionYearSelector option:selected').text();
-        if (this.attritionResults.fullFeature !== undefined) {
-            fullFeatureGraph  = Object.entries(this.attritionResults.fullFeature).map(([name, obj]) => ({ name, ...obj }))
-            for (let index = 0; index < fullFeatureGraph.length; index++) {
-              fullFeatureGraphArray.push(fullFeatureGraph[index][6]);
-              if (!graphLabels.includes(fullFeatureGraph[index][6]))
-                graphLabels.push(fullFeatureGraph[index][6])
-            }
-            // get the count of each distinct courses, then put it in an object
-            fullFeatureGraphArray.forEach(e => fullFeatureCount[e] = fullFeatureCount[e] ? fullFeatureCount[e] + 1 : 1);
-            finalFullFeatureCount = Object.keys(fullFeatureCount).map(e => {return {course: e,count:fullFeatureCount[e]}});
-            for (let index = 0; index < finalFullFeatureCount.length; index++) {
-              graphData.push(finalFullFeatureCount[index].count);
-              finalFullFeatureCount[index].color = graphColor[index];
-            }
-            console.log(JSON.stringify(graphData))
-            attritionSummary.finalFullFeatureCount = finalFullFeatureCount;
+        if (this.attritionResults.result !== undefined) {alert(this.attritionResults.result.anibdampi)
+            finalCount = this.attritionResults.result
             setTimeout(function () {
               //-------------
               // - PIE CHART -
@@ -636,10 +592,11 @@
               const canvas = document.getElementById('pieChart');
               const pieChartCanvas = canvas.getContext('2d');
               const pieData = {
-                labels: graphLabels,
+                labels: ['ANIB-DAMPI', 'BALAT', 'YAMAN', 'UGNAY', 'KAGYAT'],
                 datasets: [
                   {
-                    data: graphData,
+                    // data: [1, 1, 1, 1, 1],
+                    data: [finalCount.anibdampi, finalCount.balat, finalCount.yaman, finalCount.ugnay, finalCount.kagyat],
                     backgroundColor: graphColor
                   }
                 ]
@@ -664,118 +621,6 @@
               // - END PIE CHART -
               //-----------------y
             },1000)
-
-            // THREE FEATURES
-            threeFeatureGraph  = Object.entries(this.attritionResults.threeFeature).map(([name, obj]) => ({ name, ...obj }))
-              for (let index = 0; index < threeFeatureGraph.length; index++) {
-                threeFeatureGraphArray.push(threeFeatureGraph[index][4]);
-                if (!threeGraphLabels.includes(threeFeatureGraph[index][4]))
-                  threeGraphLabels.push(threeFeatureGraph[index][4])
-              }
-              // get the count of each distinct courses, then put it in an object
-              threeFeatureGraphArray.forEach(e => threeFeatureCount[e] = threeFeatureCount[e] ? threeFeatureCount[e] + 1 : 1);
-              finalThreeFeatureCount = Object.keys(threeFeatureCount).map(e => {return {course: e,count:threeFeatureCount[e]}});
-              for (let index = 0; index < finalThreeFeatureCount.length; index++) {
-                threeGraphData.push(finalThreeFeatureCount[index].count);
-                finalThreeFeatureCount[index].color = graphColor[index];
-              }
-              attritionSummary.threeFeatureCount = finalThreeFeatureCount;
-              console.log(JSON.stringify(attritionSummary))
-              setTimeout(() => {
-                //-------------
-                // - PIE CHART -
-                //-------------
-                // Get context with jQuery - using jQuery's .get() method.
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                $('#pieChart2').remove(); 
-                $('#chart-container2').append('<canvas id="pieChart2" height="150"></canvas>');
-                const canvas = document.getElementById('pieChart2');
-                const pieChartCanvas = canvas.getContext('2d');
-                const pieData = {
-                  labels: threeGraphLabels,
-                  datasets: [
-                    {
-                      data: threeGraphData,
-                      backgroundColor: graphColor
-                    }
-                  ]
-                };
-                const pieOptions = {
-                  legend: {
-                    display: false
-                  }
-                };
-                // Create pie or douhnut chart
-                // You can switch between pie and douhnut using the method below.
-                // eslint-disable-next-line no-unused-vars
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                const pieChart = new Chart(pieChartCanvas, {
-                  type: 'doughnut',
-                  data: pieData,
-                  options: pieOptions
-                });
-
-                //-----------------
-                // - END PIE CHART -
-                //-----------------y
-              },2000)
-
-              // TWO FEATURES
-            twoFeatureGraph  = Object.entries(this.attritionResults.twoFeature).map(([name, obj]) => ({ name, ...obj }))
-              for (let index = 0; index < twoFeatureGraph.length; index++) {
-                twoFeatureGraphArray.push(twoFeatureGraph[index][3]);
-                if (!twoGraphLabels.includes(twoFeatureGraph[index][3]))
-                  twoGraphLabels.push(twoFeatureGraph[index][3])
-              }
-              // get the count of each distinct courses, then put it in an object
-              twoFeatureGraphArray.forEach(e => twoFeatureCount[e] = twoFeatureCount[e] ? twoFeatureCount[e] + 1 : 1);
-              finalTwoFeatureCount = Object.keys(twoFeatureCount).map(e => {return {course: e,count:twoFeatureCount[e]}});
-              for (let index = 0; index < finalTwoFeatureCount.length; index++) {
-                twoGraphData.push(finalTwoFeatureCount[index].count);
-                finalTwoFeatureCount[index].color = graphColor[index];
-              }
-              attritionSummary.twoFeatureCount = finalTwoFeatureCount;
-              console.log(JSON.stringify(attritionSummary))
-              setTimeout(() => {
-                //-------------
-                // - PIE CHART -
-                //-------------
-                // Get context with jQuery - using jQuery's .get() method.
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                $('#pieChart3').remove(); 
-                $('#chart-container3').append('<canvas id="pieChart3" height="150"></canvas>');
-                const canvas = document.getElementById('pieChart3');
-                const pieChartCanvas = canvas.getContext('2d');
-                const pieData = {
-                  labels: twoGraphLabels,
-                  datasets: [
-                    {
-                      data: twoGraphData,
-                      backgroundColor: graphColor
-                    }
-                  ]
-                };
-                const pieOptions = {
-                  legend: {
-                    display: false
-                  }
-                };
-                // Create pie or douhnut chart
-                // You can switch between pie and douhnut using the method below.
-                // eslint-disable-next-line no-unused-vars
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                const pieChart = new Chart(pieChartCanvas, {
-                  type: 'doughnut',
-                  data: pieData,
-                  options: pieOptions
-                });
-
-                //-----------------
-                // - END PIE CHART -
-                //-----------------y
-              },2000)
         }
         return attritionSummary;
       },
