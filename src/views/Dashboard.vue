@@ -62,6 +62,16 @@
                               </select>
                             </div>
                             <div class="form-group mx-sm-3 mb-2">
+                              <select id="resultsCategorySelector" :disabled="finalResults.length === 0" v-model="selectedCategory"  class="form-control">
+                                  <option value="">All Category</option>
+                                  <option value="ANIB-DAMPI">ANIB-DAMPI</option>
+                                  <option value="BALAT">BALAT</option>
+                                  <option value="YAMAN">YAMAN</option>
+                                  <option value="KAGYAT">KAGYAT</option>|
+                                  <option value="UGNAY">UGNAY</option>|
+                                </select>
+                            </div>
+                            <div class="form-group mx-sm-3 mb-2">
                               <button :disabled="finalResults.length === 0"  @click="downloadReport(selectedYear, selectedSchool)" type="button" class="btn btn-info">
                               <i class="fas fa-download"></i>
                               </button>
@@ -96,7 +106,7 @@
                             <tr>
                               
                             </tr>
-                            <tr v-for="(result, index) in finalResults" :key="index">
+                            <tr v-for="(result, index) in filteredResults" :key="index">
                               <td>{{result.title}}</td>
                               <td>{{result.sectionName}}</td>
                               <td class="bg-navy">{{result.category}}</td>
@@ -257,6 +267,7 @@
         selectedSchoolName: '',
         sectionName: '',
         selectedSection:'',
+        selectedCategory:'',
         sections: [],
         schools:[],
         schoolYear: [],
@@ -674,23 +685,18 @@
     },
     computed: {
       filteredResults: function () {
-        let filterSection = this.selectedSection
-        let selectedMode = this.mode
-        let filterIndex = 0;
+        let filterSection = this.selectedCategory
         setTimeout(() => {
-          this.sectionName = $('#resultsSectionSelector option:selected').text();;
+          this.sectionName = $('#resultsCategorySelector option:selected').text();;
           this.yearName = $('#resultsYearSelector option:selected').text();
         }, 2000);
         
         if (filterSection !== "") {
-          // if gwa track are selected
-          if (selectedMode === 2 ) {
-            filterIndex = 3;
-          }
+          console.log(JSON.stringify(this.finalResults))
           return this.finalResults
             .filter(
               (entry) => this.finalResults.length
-                ? Object.keys(this.finalResults[filterIndex])
+                ? Object.keys(this.finalResults[0])
                     .some(key => ('' + entry[key]).includes(filterSection))
                 : true
             );
