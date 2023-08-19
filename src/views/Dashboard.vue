@@ -100,6 +100,7 @@
                               <th class="sticky-header">Research Title</th>
                               <th>SECTION</th>
                               <th>CATEGORY</th>
+                              <th>APPROVAL DATE</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -110,6 +111,16 @@
                               <td>{{result.title}}</td>
                               <td>{{result.sectionName}}</td>
                               <td class="bg-navy">{{result.category}}</td>
+                              <td>
+                                <input v-model="approvalDate" v-if="showDateApproval && selectedApproval === index" class="form-control" type="date" id="birthday" name="birthday">
+                                <button v-if="showDateApproval" @click="saveApproval(result.id)" type="button" class="btn btn-sm btn-success">Save</button>
+                                &nbsp;
+                                <button v-if="showDateApproval" @click="cancelApproval()"   type="button" class="btn btn-sm btn-danger" >Cancel</button>
+                                <button v-if="!showDateApproval" @click="setApproval(index)" type="button" class="btn btn-sm btn-primary">For approval</button>
+                                &nbsp;
+                                <button v-if="!showDateApproval" type="button" class="btn btn-sm btn-info" disabled>For review</button>
+
+                              </td>
                             </tr>
                           </tbody>
                         </table>
@@ -261,6 +272,9 @@
     name: 'Dashboard',
      data() {
       return {
+        approvalDate: '',
+        selectedApproval: '',
+        showDateApproval: false,
         selectedSchool:"",
         selectedYear:"",
         yearName: '',
@@ -287,6 +301,23 @@
 
     },
     methods: {
+      saveApproval(id) {
+        if (this.approvalDate === '') {
+          alert("please select approval date")
+        } else {
+          alert(this.approvalDate + ' ' + id)
+        }
+      },
+      cancelApproval() {
+        this.selectedApproval = '';
+        this.showDateApproval = false
+        set
+      },
+      setApproval(index) {
+        this.selectedApproval = index;
+        this.showDateApproval = true
+        set
+      },
       getSchools() {
         // get the schools
         this.finalResults = [];
