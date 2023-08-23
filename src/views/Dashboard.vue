@@ -101,6 +101,7 @@
                               <th>SECTION</th>
                               <th>CATEGORY</th>
                               <th>APPROVAL DATE</th>
+                              <th>ACTIONS</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -111,12 +112,13 @@
                               <td>{{result.title}}</td>
                               <td>{{result.sectionName}}</td>
                               <td class="bg-navy">{{result.category}}</td>
+                              <td class="">{{result.approvalDate}}</td>
                               <td>
                                 <input v-model="approvalDate" v-if="showDateApproval && selectedApproval === index" class="form-control" type="date" id="birthday" name="birthday">
-                                <button v-if="showDateApproval" @click="saveApproval(result.id)" type="button" class="btn btn-sm btn-success">Save</button>
+                                <button v-if="showDateApproval && selectedApproval == index" @click="saveApproval(result.id)" type="button" class="btn btn-sm btn-success">Save</button>
                                 &nbsp;
-                                <button v-if="showDateApproval" @click="cancelApproval()"   type="button" class="btn btn-sm btn-danger" >Cancel</button>
-                                <button v-if="!showDateApproval" @click="setApproval(index)" type="button" class="btn btn-sm btn-primary">For approval</button>
+                                <button v-if="showDateApproval && selectedApproval == index" @click="cancelApproval()"   type="button" class="btn btn-sm btn-danger" >Cancel</button>
+                                <button v-if="!showDateApproval" @click="setApproval(index)" type="button" class="btn btn-sm btn-primary">Set approval date</button>
                                 &nbsp;
                                 <button v-if="!showDateApproval" type="button" class="btn btn-sm btn-info" disabled>For review</button>
 
@@ -301,18 +303,51 @@
 
     },
     methods: {
+      cancelApproval() {
+        this.selectedApproval = '';
+        this.showDateApproval = false;
+        this.approvalDate = '';
+      },
       saveApproval(id) {
         if (this.approvalDate === '') {
           alert("please select approval date")
         } else {
-          alert(this.approvalDate + ' ' + id)
+          this.nowLoading = true;
+          // get the sections
+          let formData = new FormData();
+          formData.append('userId', localStorage.getItem('userId'));
+          formData.append('token', localStorage.getItem('validatorToken'));
+          formData.append('resultId', id);
+          formData.append('approvalDate', this.approvalDate);
+          axios.post(
+            process.env.VUE_APP_ROOT_API + 'admin/set-approval-date.php',formData,
+            {
+            headers: {
+            'Content-Type': 'multipart/form-data', 
+            }
+          }
+          ).then((response) => {
+            var result = response.data
+            if (result.status === 'success') {
+              setTimeout(() => {
+              this.cancelApproval()
+              this.showResearchProposals()
+              this.nowLoading = false;
+              }, 1000);
+              
+
+            } else {
+              alert('something went wrong')
+            }
+            this.nowLoading = false;
+          }).catch((response) => {
+            //handle error
+            this.nowLoading = false;
+            console.log(response)
+          });
         }
       },
-      cancelApproval() {
-        this.selectedApproval = '';
-        this.showDateApproval = false
-        set
-      },
+      
       setApproval(index) {
         this.selectedApproval = index;
         this.showDateApproval = true
