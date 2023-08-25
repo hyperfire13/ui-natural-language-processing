@@ -202,6 +202,24 @@
                       </ul>
                     </div>
                   </div>
+                  <div v-show="graphDisplay > 0" class="row">
+                    <div class="col-md-5">
+                      <div v-if="graphDisplay > 0" class="text-center">
+                        <br><br>
+                        <h6 class="card-text">Proposal Approval Summary</h6>
+                      </div>
+                      <br>
+                      <div id="chart-container2" class="chart-responsive">
+                        <canvas id="pieChart2" height="200"></canvas>
+                      </div>
+                    </div>
+                    <div class="col-md-7">
+                      <ul class="chart-legend clearfix">
+                        <li><i v-bind:style="{ color: globalPieColor[0] }" class="far fa-circle "></i> For Approval : <span class="badge" v-bind:style="{ color: globalPieColor[0]}" style="font-size:20px;">{{ graphLabel.hasApprovalDate}}</span></li>
+                        <li><i v-bind:style="{ color: globalPieColor[1] }" class="far fa-circle "></i> Approval Date not set : <span class="badge" v-bind:style="{ color: globalPieColor[1]}" style="font-size:20px;">{{ graphLabel.noApprovalDate}}</span></li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
                 <div v-if="nowLoading" class="overlay"><i class="fas fa-2x fa-sync-alt fa-spin"></i></div>
               </div>
@@ -334,7 +352,6 @@
               this.showResearchProposals()
               this.nowLoading = false;
               }, 1000);
-              
 
             } else {
               alert('something went wrong')
@@ -421,7 +438,7 @@
         this.sectionName = '';
         this.finalResults = [],
         this.getSchoolYear();
-        if (tab === 3) {
+        if (tab === 3 || tab === 4) {
           this.attritionResults = [];
           
         }
@@ -590,6 +607,46 @@
                 type: 'doughnut',
                 data: pieData,
                 options: pieOptions
+              });
+
+              //-----------------
+              // - END PIE CHART -
+              //-----------------y
+            },1000)
+            setTimeout(function () {
+              //-------------
+              // - PIE CHART -
+              //-------------
+              // Get context with jQuery - using jQuery's .get() method.
+              // eslint-disable-next-line @typescript-eslint/no-empty-function
+              $('#pieChart2').remove(); 
+              $('#chart-container2').append('<canvas id="pieChart2" height="150"></canvas>');
+              const canvas2 = document.getElementById('pieChart2');
+              const pieChartCanvas2 = canvas2.getContext('2d');
+              const pieData2 = {
+                labels: ['For Approval', 'Approval Date not set'],
+                datasets: [
+                  {
+                    // data: [1, 1, 1, 1, 1],
+                    data: [finalCount.hasApprovalDate, finalCount.noApprovalDate],
+                    backgroundColor: graphColor
+                  }
+                ]
+              };
+              const pieOptions2 = {
+                legend: {
+                  display: false
+                }
+              };
+              // Create pie or douhnut chart
+              // You can switch between pie and douhnut using the method below.
+              // eslint-disable-next-line no-unused-vars
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              const pieChart = new Chart(pieChartCanvas2, {
+                type: 'doughnut',
+                data: pieData2,
+                options: pieOptions2
               });
 
               //-----------------
@@ -826,6 +883,46 @@
                 type: 'doughnut',
                 data: pieData,
                 options: pieOptions
+              });
+
+              //-----------------
+              // - END PIE CHART -
+              //-----------------y
+            },1000)
+            setTimeout(function () {
+              //-------------
+              // - PIE CHART -
+              //-------------
+              // Get context with jQuery - using jQuery's .get() method.
+              // eslint-disable-next-line @typescript-eslint/no-empty-function
+              $('#pieChart2').remove(); 
+              $('#chart-container2').append('<canvas id="pieChart2" height="150"></canvas>');
+              const canvas2 = document.getElementById('pieChart2');
+              const pieChartCanvas2 = canvas2.getContext('2d');
+              const pieData2 = {
+                labels: ['ANIB-DAMPI', 'BALAT', 'YAMAN', 'UGNAY', 'KAGYAT'],
+                datasets: [
+                  {
+                    // data: [1, 1, 1, 1, 1],
+                    data: [finalCount.anibdampi, finalCount.balat, finalCount.yaman, finalCount.ugnay, finalCount.kagyat],
+                    backgroundColor: graphColor
+                  }
+                ]
+              };
+              const pieOptions2 = {
+                legend: {
+                  display: false
+                }
+              };
+              // Create pie or douhnut chart
+              // You can switch between pie and douhnut using the method below.
+              // eslint-disable-next-line no-unused-vars
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              const pieChart = new Chart(pieChartCanvas2, {
+                type: 'doughnut',
+                data: pieData2,
+                options: pieOptions2
               });
 
               //-----------------
